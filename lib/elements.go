@@ -29,20 +29,20 @@ func New(configDir string, elementsPath string) (*Elements, error) {
 		ConfigDir:    configDir,
 	}
 
-	systemPathRE := regexp.MustCompile("^system")
-	externalPathRE := regexp.MustCompile("^external")
+	systemPathRE := regexp.MustCompile("^System")
+	externalPathRE := regexp.MustCompile("^External")
 
 	switch {
 	case systemPathRE.MatchString(elementsPath):
 		elements := e.GetSystemElements()
-		e.Add("system", elements)
+		e.Add("System", elements)
 	case externalPathRE.MatchString(elementsPath):
 		externalElements, err := e.GetExternalElements()
 		if err != nil {
 			return e, err
 		}
 
-		e.Add("external", externalElements)
+		e.Add("External", externalElements)
 	default:
 		elements := e.GetSystemElements()
 		externalElements, err := e.GetExternalElements()
@@ -50,8 +50,8 @@ func New(configDir string, elementsPath string) (*Elements, error) {
 			return e, err
 		}
 
-		e.Add("system", elements)
-		e.Add("external", externalElements)
+		e.Add("System", elements)
+		e.Add("External", externalElements)
 	}
 
 	return e, nil

@@ -13,7 +13,7 @@ Elements is able to detect a standard set of information about Linux systems. Si
 ```shell
 $ elements get
 
-  "system": {
+  "System": {
        "Architecture": "x86_64",
        "BlockDevices": {
         "vda": {
@@ -42,7 +42,7 @@ $ elements get -p system.BlockDevices.vda
 To retrieve an exact value, run:
 
 ```shell
-$ elements get -p system.BlockDevices.vda.Device
+$ elements get -p System.BlockDevices.vda.Device
 
 vda
 ```
@@ -58,7 +58,7 @@ $ elements serve
 and in another, run:
 
 ```shell
-$ curl localhost:8888/elements/system/BlockDevices/vda
+$ curl localhost:8888/elements/System/BlockDevices/vda
 {
   "Device": "vda",
   "IOTicks": 6548052,
