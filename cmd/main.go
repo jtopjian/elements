@@ -11,14 +11,15 @@ var flagDebug cli.BoolFlag
 var flagConfigDir cli.StringFlag
 var flagElementPath cli.StringFlag
 var flagListen cli.StringFlag
+var flagFormat cli.StringFlag
 var defaultConfigDir string
 
 func init() {
 	// Figure out the OS
 	switch goos := runtime.GOOS; goos {
-	case "linux":
-		defaultConfigDir = "/etc/elements"
-	case "darwin":
+	case "windows":
+		defaultConfigDir = "%PROGRAMDATA%/elements"
+	default:
 		defaultConfigDir = "/etc/elements"
 	}
 
@@ -48,6 +49,14 @@ func init() {
 		Usage: "Address to serve elements via http",
 		Value: ":8888",
 	}
+
+	// flagFormat specifies the output format of the elements.
+	flagFormat = cli.StringFlag{
+		Name:  "format,f",
+		Usage: "The output format. Currently supported: json",
+		Value: "json",
+	}
+
 }
 
 func main() {
@@ -60,6 +69,7 @@ func main() {
 		&flagDebug,
 		&flagConfigDir,
 		&flagElementPath,
+		&flagFormat,
 	}
 
 	app.Commands = []cli.Command{

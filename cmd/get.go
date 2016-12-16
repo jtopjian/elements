@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/codegangsta/cli"
-	elements "github.com/jtopjian/elements/lib"
+	"github.com/jtopjian/elements/lib"
 )
 
 var cmdGet cli.Command
@@ -18,21 +18,31 @@ func init() {
 			&flagConfigDir,
 			&flagDebug,
 			&flagElementPath,
+			&flagFormat,
 		},
 	}
 }
 
 func actionGet(c *cli.Context) {
-	e, err := elements.New(c.String("configdir"), c.String("path"))
+	config := lib.Config{
+		Directory:    c.String("configdir"),
+		OutputFormat: c.String("format"),
+		Path:         c.String("path"),
+	}
+
+	elements := lib.Elements{
+		Config: config,
+	}
+
+	output, err := elements.Get()
 	if err != nil {
 		errAndExit(err)
 	}
 
-	elements, err := e.Elements2JSON()
+	formattedOutput, err := lib.PrintJSON(output)
 	if err != nil {
 		errAndExit(err)
 	}
 
-	fmt.Printf("%s", elements)
-
+	fmt.Printf("%s", formattedOutput)
 }

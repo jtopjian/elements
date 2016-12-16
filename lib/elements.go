@@ -15,31 +15,42 @@ import (
 	"github.com/jtopjian/elements/utils"
 )
 
-type Elements struct {
-	Elements     map[string]interface{}
-	ElementsPath string
-	ConfigDir    string
-	mu           sync.Mutex
+type Config struct {
+	Directory    string
+	Listen       string
+	OutputFormat string
+	Path         string
 }
 
-func New(configDir string, elementsPath string) (*Elements, error) {
-	e := &Elements{
-		Elements:     make(map[string]interface{}),
-		ElementsPath: elementsPath,
-		ConfigDir:    configDir,
+type Elements struct {
+	Config   Config
+	Elements map[string]interface{}
+	mu       sync.Mutex
+}
+
+func (e *Elements) Add(key string, value interface{}) {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+
+	if e.Elements == nil {
+		e.Elements = make(map[string]interface{})
 	}
 
+	e.Elements[key] = value
+}
+
+func (e *Elements) Get() (interface{}, error) {
 	systemPathRE := regexp.MustCompile("^System")
 	externalPathRE := regexp.MustCompile("^External")
 
 	switch {
-	case systemPathRE.MatchString(elementsPath):
+	case systemPathRE.MatchString(e.Config.Path):
 		elements := e.GetSystemElements()
 		e.Add("System", elements)
-	case externalPathRE.MatchString(elementsPath):
+	case externalPathRE.MatchString(e.Config.Path):
 		externalElements, err := e.GetExternalElements()
 		if err != nil {
-			return e, err
+			return nil, err
 		}
 
 		e.Add("External", externalElements)
@@ -47,20 +58,14 @@ func New(configDir string, elementsPath string) (*Elements, error) {
 		elements := e.GetSystemElements()
 		externalElements, err := e.GetExternalElements()
 		if err != nil {
-			return e, err
+			return nil, err
 		}
 
 		e.Add("System", elements)
 		e.Add("External", externalElements)
 	}
 
-	return e, nil
-}
-
-func (e *Elements) Add(key string, value interface{}) {
-	e.mu.Lock()
-	defer e.mu.Unlock()
-	e.Elements[key] = value
+	return e.ElementsAtPath()
 }
 
 func (e *Elements) SystemElements() error {
@@ -72,46 +77,58 @@ func (e *Elements) SystemElements() error {
 }
 
 func (e *Elements) GetExternalElements() (map[string]interface{}, error) {
-	externalElementsDir := fmt.Sprintf("%s/elements.d", e.ConfigDir)
+	externalElementsDir := fmt.Sprintf("%s/elements.d", e.Config.Directory)
 	externalElements := make(map[string]interface{})
+	externalElementsDirExists := true
 
-	d, err := os.Open(externalElementsDir)
+	_, err := os.Stat(externalElementsDir)
 	if err != nil {
-		return nil, err
-	}
-	defer d.Close()
-
-	files, err := d.Readdir(0)
-	if err != nil {
-		return nil, fmt.Errorf("Unable to read %s: %s", externalElementsDir, err)
-	}
-
-	executableElements := make([]string, 0)
-	staticElements := make([]string, 0)
-
-	for _, fi := range files {
-		name := filepath.Join(externalElementsDir, fi.Name())
-		if utils.IsExecutable(fi) {
-			executableElements = append(executableElements, name)
-			continue
-		}
-		if strings.HasSuffix(name, ".json") {
-			staticElements = append(staticElements, name)
+		if os.IsNotExist(err) {
+			externalElementsDirExists = false
+		} else {
+			return nil, err
 		}
 	}
 
-	var wg sync.WaitGroup
-	for _, p := range staticElements {
-		p := p
-		wg.Add(1)
-		go e.elementsFromFile(p, &wg, externalElements)
+	if externalElementsDirExists {
+		d, err := os.Open(externalElementsDir)
+		if err != nil {
+			return nil, err
+		}
+		defer d.Close()
+
+		files, err := d.Readdir(0)
+		if err != nil {
+			return nil, fmt.Errorf("Unable to read %s: %s", externalElementsDir, err)
+		}
+
+		executableElements := make([]string, 0)
+		staticElements := make([]string, 0)
+
+		for _, fi := range files {
+			name := filepath.Join(externalElementsDir, fi.Name())
+			if utils.IsExecutable(fi) {
+				executableElements = append(executableElements, name)
+				continue
+			}
+			if strings.HasSuffix(name, ".json") {
+				staticElements = append(staticElements, name)
+			}
+		}
+
+		var wg sync.WaitGroup
+		for _, p := range staticElements {
+			p := p
+			wg.Add(1)
+			go e.elementsFromFile(p, &wg, externalElements)
+		}
+		for _, p := range executableElements {
+			p := p
+			wg.Add(1)
+			go e.elementsFromExec(p, &wg, externalElements)
+		}
+		wg.Wait()
 	}
-	for _, p := range executableElements {
-		p := p
-		wg.Add(1)
-		go e.elementsFromExec(p, &wg, externalElements)
-	}
-	wg.Wait()
 
 	return externalElements, nil
 }
@@ -157,7 +174,7 @@ func (e *Elements) elementsFromExec(path string, wg *sync.WaitGroup, externalEle
 func (e *Elements) ElementsAtPath() (interface{}, error) {
 	var data interface{}
 	var value interface{}
-	path_pieces := strings.Split(e.ElementsPath, ".")
+	path_pieces := strings.Split(e.Config.Path, ".")
 
 	// Convert the Element structure into a generic interface{}
 	// by first converting it to JSON and then decoding it.
@@ -193,29 +210,4 @@ func (e *Elements) ElementsAtPath() (interface{}, error) {
 	}
 
 	return data, nil
-}
-
-func (e *Elements) Elements2JSON() (string, error) {
-	elements, err := e.ElementsAtPath()
-	if err != nil || elements == nil {
-		return "", err
-	}
-
-	if _, ok := elements.([]interface{}); ok {
-		if j, err := json.MarshalIndent(elements, " ", " "); err != nil {
-			return "", err
-		} else {
-			return string(j), nil
-		}
-	} else {
-		if _, ok := elements.(map[string]interface{}); ok {
-			if j, err := json.MarshalIndent(elements, " ", " "); err != nil {
-				return "", err
-			} else {
-				return string(j), nil
-			}
-		} else {
-			return fmt.Sprintf("%s", elements), nil
-		}
-	}
 }
