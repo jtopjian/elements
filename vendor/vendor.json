@@ -1,0 +1,18 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "ksQn7N6GPuc8O7fFIGPivEda4gY=",
+			"comment": "1.2.0-183-gb5232bb",
+			"path": "github.com/codegangsta/cli",
+			"revision": "b5232bb2934f606f9f27a1305f1eea224e8e8b88"
+		},
+		{
+			"checksumSHA1": "15doxxBfOxOhWExkxjPNo6Y7fEw=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "833a04a10549a95dc34458c195cbad61bbb6cb4d"
+		}
+	],
+	"rootPath": "github.com/jtopjian/elements"
+}
