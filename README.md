@@ -1,6 +1,10 @@
 # Elements
 
-Get information about a system.
+Elements retrieves information about a system such as CPU/Processors, disks, memory, and network interfaces. It is meant to be used to poll a system about it's static attributes.
+
+This tool is similar to Facter, Ohai, Ansible facts, etc.
+
+For dynamic attributes, such as load average an IOPS, use a more suitable metric collection tool.
 
 ## Install
 
@@ -8,43 +12,66 @@ Download the latest [release](https://github.com/jtopjian/elements/releases).
 
 ## Usage
 
-Elements is able to detect a standard set of information about Linux systems. Simply run `elements` on the command line and see the result:
+Run `elements` with no arguments on the command line to see the usage and options.
+
+Elements is able to detect a standard set of information about a system. Simply run `elements` on the command line and see the result:
 
 ```shell
 $ elements get
 
-  "System": {
-       "Architecture": "x86_64",
-       "BlockDevices": {
-        "vda": {
-          "Device": "vda",
-          "IOTicks": 6547904,
-          "InFlight": 0,
-          "ReadIOs": 124315,
-       ...
+{
+  "system": {
+    "host": {
+			"bootTime": 1480266892,
+			"hostid": "2DAAF9F7-0ED2-4DA7-BDD7-7A03F37C091A",
+			"hostname": "jtdev",
+			"kernelVersion": "4.4.0-45-generic",
+			"os": "linux",
+			"platform": "ubuntu",
+			"platformFamily": "debian",
+			"platformVersion": "16.04",
+			"procs": 682,
+			"uptime": 1678017,
+			"virtualizationRole": "host",
+			"virtualizationSystem": "kvm"
+    },
+		...
 ```
-
-The output of Elements is JSON to make it easy to import into other utilities and systems.
 
 To retrieve a subset of elements, run:
 
 ```shell
-$ elements get -p system.BlockDevices.vda
+$ elements get -p system.interfaces.ens3
 
 {
-  "Device": "vda",
-  "IOTicks": 6548052,
-  "InFlight": 0,
-  "ReadIOs": 124315,
-  ...
+  "flags": [
+   "up",
+   "broadcast",
+   "multicast"
+  ],
+  "hardwareaddr": "fa:16:3e:dc:86:b9",
+  "ipv4": [
+   {
+    "address": "10.1.12.176",
+    "cidr": "10.1.12.176/20"
+   }
+  ],
+  "ipv6": [
+   {
+    "address": "fe80::f816:3eff:fedc:86b9",
+    "cidr": "fe80::f816:3eff:fedc:86b9/64"
+   }
+  ],
+  "mtu": 1500
+}
 ```
 
 To retrieve an exact value, run:
 
 ```shell
-$ elements get -p System.BlockDevices.vda.Device
+$ elements get -p system.interfaces.ens3.ipv4.0.address
 
-vda
+10.1.12.176
 ```
 
 ### Elements Daemon
@@ -58,20 +85,14 @@ $ elements serve
 and in another, run:
 
 ```shell
-$ curl localhost:8888/elements/System/BlockDevices/vda
-{
-  "Device": "vda",
-  "IOTicks": 6548052,
-  "InFlight": 0,
-  "ReadIOs": 124315,
-  ...
+$ curl localhost:8888/elements/system/interfaces/ens3
 ```
 
 ## External Elements
 
 Static JSON files and executable files can be placed under `/etc/elements/elements.d`. They will automatically be executed and read when `elements` is run.
 
-The output of these files must be valid JSON. For example:
+The output of these files must be valid JSON. For example, given the executable file `/etc/elements/elements.d/foo.sh`:
 
 ```bash
 #!/bin/bash
@@ -79,13 +100,27 @@ The output of these files must be valid JSON. For example:
 echo '{"hello": "world"}'
 ```
 
+Elements will output:
+
+```shell
+$ elements get
+{
+  "external": {
+   "foo": {
+    "hello": "world"
+   }
+  },
+	"system": {
+	...
+```
+
 ## Compile from Source
 
 1. Setup a standard Go environment.
-2. Run: `go get github.com/jtopjian/elements`
-3. Run `cd $GOROOT/src/github.com/jtopjian/elements`
+2. Run: `go get github.com/jtopjian/elements/...`
+3. Run: `cd $GOROOT/src/github.com/jtopjian/elements`
 4. Run: `go build -o elements cmd/*.go`
 
 ## History and Credits
 
-Elements was originally a large fork of [Terminus](https://github.com/kelseyhightower/terminus) which you can find [here](https://github.com/jtopjian/terminus).
+Elements was originally a large fork of [Terminus](https://github.com/kelseyhightower/terminus). The move to `gopsutil` was inspired by [go-facter](https://github.com/zstyblik/go-facter).
