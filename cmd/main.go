@@ -61,16 +61,9 @@ func init() {
 
 func main() {
 	app := cli.NewApp()
-	app.Name = "element"
-	app.Usage = "Obtain facts about a system"
+	app.Name = "elements"
+	app.Usage = "Obtain system information"
 	app.Version = version
-
-	app.Flags = []cli.Flag{
-		&flagDebug,
-		&flagConfigDir,
-		&flagElementPath,
-		&flagFormat,
-	}
 
 	app.Commands = []cli.Command{
 		cmdGet,

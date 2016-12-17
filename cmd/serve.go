@@ -7,10 +7,17 @@ import (
 	"strings"
 
 	"github.com/codegangsta/cli"
-	"github.com/jtopjian/elements/lib"
+
+	e "github.com/jtopjian/elements/lib/elements"
+	o "github.com/jtopjian/elements/lib/output"
 )
 
 var cmdServe cli.Command
+
+type httpConfig struct {
+	EConfig e.Config
+	OConfig o.Config
+}
 
 type httpError struct {
 	Error   error
@@ -19,8 +26,8 @@ type httpError struct {
 }
 
 type httpHandler struct {
-	Config lib.Config
-	H      func(lib.Config, http.ResponseWriter, *http.Request) *httpError
+	C httpConfig
+	H func(httpConfig, http.ResponseWriter, *http.Request) *httpError
 }
 
 func init() {
@@ -38,42 +45,54 @@ func init() {
 }
 
 func (hh httpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if err := hh.H(hh.Config, w, r); err != nil {
+	if err := hh.H(hh.C, w, r); err != nil {
 		http.Error(w, err.Message, err.Code)
 		errAndExit(fmt.Errorf("Error serving requests: %s", err.Message))
 	}
 }
 
 func actionServe(c *cli.Context) {
-	config := lib.Config{
-		Directory:    c.String("configdir"),
-		Listen:       c.String("listen"),
-		OutputFormat: c.String("format"),
-		Path:         c.String("path"),
+	eConfig := e.Config{
+		Directory: c.String("configdir"),
+		Listen:    c.String("listen"),
+		Path:      c.String("path"),
+	}
+
+	oConfig := o.Config{
+		Format: c.String("format"),
+	}
+
+	config := httpConfig{
+		eConfig,
+		oConfig,
 	}
 
 	http.Handle("/elements", httpHandler{config, elementsHandler})
 	http.Handle("/elements/", httpHandler{config, elementsHandler})
-	debug.Printf("%s", http.ListenAndServe(config.Listen, nil))
+	debug.Printf("%s", http.ListenAndServe(eConfig.Listen, nil))
 }
 
-func elementsHandler(config lib.Config, w http.ResponseWriter, r *http.Request) *httpError {
+func elementsHandler(config httpConfig, w http.ResponseWriter, r *http.Request) *httpError {
 	pathre := regexp.MustCompile("^/elements/?")
 	path := pathre.ReplaceAllString(r.URL.Path, "")
 
 	path = strings.Replace(path, "/", ".", -1)
 	debug.Printf("Element path requested: %s", path)
 
-	elements := lib.Elements{
-		Config: config,
+	elements := e.Elements{
+		Config: config.EConfig,
 	}
 
-	output, err := elements.Get()
+	output := o.Output{
+		Config: config.OConfig,
+	}
+
+	collectedElements, err := elements.Get()
 	if err != nil {
 		return &httpError{err, "Error processing elements", 500}
 	}
 
-	formattedOutput, err := lib.PrintJSON(output)
+	formattedOutput, err := output.Generate(collectedElements)
 	if err != nil {
 		return &httpError{err, "Error processing elements", 500}
 	}
