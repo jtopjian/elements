@@ -1,24 +1,20 @@
 sudo: false
 language: go
 go:
-  - 1.6
-env:
-  - GIMME_OS=linux GIMME_ARCH=amd64 GO15VENDOREXPERIMENT=1
-  - GIMME_OS=darwin GIMME_ARCH=amd64 GO15VENDOREXPERIMENT=1
-  - GIMME_OS=windows GIMME_ARCH=amd64 GO15VENDOREXPERIMENT=1
-before_install:
- - go get github.com/tools/godep
+  - 1.7
+
 install:
- - godep restore
+  - go get github.com/mitchellh/gox
+
 script:
-  - go build -o elements -v ./cmd/...
-  - tar czvf elements_${TRAVIS_TAG}_${GIMME_OS}_${GIMME_ARCH}.tar.gz elements
+  - gox -osarch="darwin/amd64 linux/amd64 linux/arm freebsd/amd64 windows/amd64" -output "dist/elements-{{.OS}}-{{.Arch}}" github.com/jtopjian/elements/cmd
+
 deploy:
   provider: releases
   skip_cleanup: true
   api_key:
     secure: UcxlFPtIkvZfgw+q5URtGRcAQrP84YlbS5ancEcX7XwWY3X/nXnPKpgULNaig5ahtwqlNCkWEtcRiwC2G87vdgC0ahMq5maOqm/Vy0dDE5kMV7rWJwRAHyUdqaks4+hJqQp+Zn5+YhbFsbvmiFYcXQ4gp5E6Nrn7CQdEBCqaX8ikSyXbMpmHYw4D96Ci6olBo+yYmTffpVHgcsbmHpXBDSvEwofYvfbIvIKLf6LM3KNWUJzLNklEECVnWjjiDzeHFBQnCdoxWZHYCabwpOIrCxTFJZPJDnDZUZqs3aOpGfvm6SSvdUHUOlJqU0YLEM7tCaO1rfcUJxMbbmSrjfDCcC0oupLNQjioN2ockXNUrla0lgqnAMeVYvwDX4AAUH7RA8O5rT2gdgp0XGzMfREQ06VOHgkXPdZYGzhGaXQ8er1NBDKHQXVZ3ovGDufP26FfBXkkIPrZEKC+qc5haNk3j0+li/TgnJfZkGrTPtI+/RRU2afRC9g+71vappuTjQO0azU1s9j5g7UxqzdjmSSpZonfO2f1WW4Ov8ZlyImCyKpbKNAcOTmuxLDpgxRxNNTiDF3vtl8ySVvQzNLmO0//gaKAO71bj1Dc5mp3Rnmh5GNvbDegZOCNMyZUmaf1VCK2RVQ9ffRqOpg6Qpz1Gx2ymCTEUToElFo3ODXtfk6nJcU=
-  file: elements_*
+  file: "dist/*"
   file_glob: true
   on:
     repo: jtopjian/elements

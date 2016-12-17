@@ -9,10 +9,10 @@
 			"revisionTime": "2016-08-11T21:45:55Z"
 		},
 		{
-			"checksumSHA1": "ksQn7N6GPuc8O7fFIGPivEda4gY=",
-			"comment": "1.2.0-183-gb5232bb",
+			"checksumSHA1": "DIhhLfId4jP1kWUBkcuSM3NMmZc=",
 			"path": "github.com/codegangsta/cli",
-			"revision": "b5232bb2934f606f9f27a1305f1eea224e8e8b88"
+			"revision": "0bdeddeeb0f650497d603c4ad7b20cfe685682f6",
+			"revisionTime": "2016-11-22T04:36:10Z"
 		},
 		{
 			"checksumSHA1": "wDZdTaY9JiqqqnF4c3pHP71nWmk=",
@@ -25,6 +25,30 @@
 			"path": "github.com/go-ole/go-ole/oleutil",
 			"revision": "5e9c030faf78847db7aa77e3661b9cc449de29b7",
 			"revisionTime": "2016-11-16T06:46:58Z"
+		},
+		{
+			"checksumSHA1": "oDZ9GZ4ijuuDL1cBxvRJsBkml2I=",
+			"path": "github.com/jtopjian/elements/cmd",
+			"revision": "4a73a6b7be514ea27213657cac5f7ab3efd438f2",
+			"revisionTime": "2016-12-17T04:03:31Z"
+		},
+		{
+			"checksumSHA1": "DqpIj++M5V1B16Fn+w/ttAexHLs=",
+			"path": "github.com/jtopjian/elements/lib/elements",
+			"revision": "4a73a6b7be514ea27213657cac5f7ab3efd438f2",
+			"revisionTime": "2016-12-17T04:03:31Z"
+		},
+		{
+			"checksumSHA1": "tg3xaeQN5P/RY+8Syb6bYOjwszw=",
+			"path": "github.com/jtopjian/elements/lib/output",
+			"revision": "4a73a6b7be514ea27213657cac5f7ab3efd438f2",
+			"revisionTime": "2016-12-17T04:03:31Z"
+		},
+		{
+			"checksumSHA1": "iRCmlUnSXHDyOGeRb0VvYqajMu8=",
+			"path": "github.com/jtopjian/elements/utils",
+			"revision": "4a73a6b7be514ea27213657cac5f7ab3efd438f2",
+			"revisionTime": "2016-12-17T04:03:31Z"
 		},
 		{
 			"checksumSHA1": "ujFjoR6H3TDeiuY9kvvwSwBMcJk=",
@@ -73,11 +97,6 @@
 			"path": "github.com/shirou/w32",
 			"revision": "bb4de0191aa41b5507caa14b0650cdbddcd9280b",
 			"revisionTime": "2016-09-30T03:27:40Z"
-		},
-		{
-			"checksumSHA1": "15doxxBfOxOhWExkxjPNo6Y7fEw=",
-			"path": "golang.org/x/sys/unix",
-			"revision": "833a04a10549a95dc34458c195cbad61bbb6cb4d"
 		}
 	],
 	"rootPath": "github.com/jtopjian/elements"
