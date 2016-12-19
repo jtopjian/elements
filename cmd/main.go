@@ -53,7 +53,7 @@ func init() {
 	// flagFormat specifies the output format of the elements.
 	flagFormat = cli.StringFlag{
 		Name:  "format,f",
-		Usage: "The output format. Currently supported: json",
+		Usage: "The output format. Currently supported: json, shell",
 		Value: "json",
 	}
 

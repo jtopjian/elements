@@ -74,6 +74,17 @@ $ elements get -p system.interfaces.ens3.ipv4.0.address
 10.1.12.176
 ```
 
+### Output Formats
+
+Elements can be printed out in two different formats: JSON and shell. By default, JSON will be used, but shell is useful for within shell scripts:
+
+```bash
+#!/bin/bash
+
+eval $(elements get -f shell)
+echo $elements_system_interfaces_ens3_ipv4_0_address
+```
+
 ### Elements Daemon
 
 Elements is able to be run in a daemon mode and accessed over HTTP. In one terminal, run:
