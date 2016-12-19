@@ -4,7 +4,7 @@ Elements retrieves information about a system such as CPU/Processors, disks, mem
 
 This tool is similar to Facter, Ohai, Ansible facts, etc.
 
-For dynamic attributes, such as load average an IOPS, use a more suitable metric collection tool.
+For dynamic attributes, such as load average and IOPS, use a more suitable metric collection tool.
 
 ## Install
 
