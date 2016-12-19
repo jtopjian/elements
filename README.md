@@ -8,13 +8,13 @@ For dynamic attributes, such as load average an IOPS, use a more suitable metric
 
 ## Install
 
-Download the latest [release](https://github.com/jtopjian/elements/releases).
+Download the latest binary [release](https://github.com/jtopjian/elements/releases). Linux, Mac, FreeBSD, and Windows binaries are currently available, though testing has only been done on Linux and Mac.
 
 ## Usage
 
 Run `elements` with no arguments on the command line to see the usage and options.
 
-Elements is able to detect a standard set of information about a system. Simply run `elements` on the command line and see the result:
+Elements is able to detect a standard set of information about a system. Simply run `elements get` on the command line and see the result:
 
 ```shell
 $ elements get
@@ -38,7 +38,7 @@ $ elements get
 		...
 ```
 
-To retrieve a subset of elements, run:
+To retrieve a subset of elements, "walk" the tree using a dotted notation:
 
 ```shell
 $ elements get -p system.interfaces.ens3
@@ -66,7 +66,7 @@ $ elements get -p system.interfaces.ens3
 }
 ```
 
-To retrieve an exact value, run:
+To retrieve an exact value, "walk" the tree all the way to a final element:
 
 ```shell
 $ elements get -p system.interfaces.ens3.ipv4.0.address
@@ -113,6 +113,8 @@ $ elements get
 	"system": {
 	...
 ```
+
+If the file is executable (ie: `chmod +x`), Elements will execute it. Non-executable files will be read directly.
 
 ## Compile from Source
 
