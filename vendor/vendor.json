@@ -9,12 +9,6 @@
 			"revisionTime": "2016-08-11T21:45:55Z"
 		},
 		{
-			"checksumSHA1": "DIhhLfId4jP1kWUBkcuSM3NMmZc=",
-			"path": "github.com/codegangsta/cli",
-			"revision": "0bdeddeeb0f650497d603c4ad7b20cfe685682f6",
-			"revisionTime": "2016-11-22T04:36:10Z"
-		},
-		{
 			"checksumSHA1": "wDZdTaY9JiqqqnF4c3pHP71nWmk=",
 			"path": "github.com/go-ole/go-ole",
 			"revision": "5e9c030faf78847db7aa77e3661b9cc449de29b7",
@@ -73,6 +67,12 @@
 			"path": "github.com/shirou/w32",
 			"revision": "bb4de0191aa41b5507caa14b0650cdbddcd9280b",
 			"revisionTime": "2016-09-30T03:27:40Z"
+		},
+		{
+			"checksumSHA1": "LMu1NsthSqcXfKu0m6YGPAmwBcY=",
+			"path": "github.com/urfave/cli",
+			"revision": "0bdeddeeb0f650497d603c4ad7b20cfe685682f6",
+			"revisionTime": "2016-11-22T04:36:10Z"
 		}
 	],
 	"rootPath": "github.com/jtopjian/elements"

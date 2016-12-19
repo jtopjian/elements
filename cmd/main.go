@@ -4,7 +4,7 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/codegangsta/cli"
+	"github.com/urfave/cli"
 )
 
 var flagDebug cli.BoolFlag
