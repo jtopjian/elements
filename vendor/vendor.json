@@ -27,30 +27,6 @@
 			"revisionTime": "2016-11-16T06:46:58Z"
 		},
 		{
-			"checksumSHA1": "oDZ9GZ4ijuuDL1cBxvRJsBkml2I=",
-			"path": "github.com/jtopjian/elements/cmd",
-			"revision": "4a73a6b7be514ea27213657cac5f7ab3efd438f2",
-			"revisionTime": "2016-12-17T04:03:31Z"
-		},
-		{
-			"checksumSHA1": "DqpIj++M5V1B16Fn+w/ttAexHLs=",
-			"path": "github.com/jtopjian/elements/lib/elements",
-			"revision": "4a73a6b7be514ea27213657cac5f7ab3efd438f2",
-			"revisionTime": "2016-12-17T04:03:31Z"
-		},
-		{
-			"checksumSHA1": "tg3xaeQN5P/RY+8Syb6bYOjwszw=",
-			"path": "github.com/jtopjian/elements/lib/output",
-			"revision": "4a73a6b7be514ea27213657cac5f7ab3efd438f2",
-			"revisionTime": "2016-12-17T04:03:31Z"
-		},
-		{
-			"checksumSHA1": "iRCmlUnSXHDyOGeRb0VvYqajMu8=",
-			"path": "github.com/jtopjian/elements/utils",
-			"revision": "4a73a6b7be514ea27213657cac5f7ab3efd438f2",
-			"revisionTime": "2016-12-17T04:03:31Z"
-		},
-		{
 			"checksumSHA1": "ujFjoR6H3TDeiuY9kvvwSwBMcJk=",
 			"path": "github.com/shirou/gopsutil/cpu",
 			"revision": "c42889c31346d051d87b6b1bf8ba4745b4e485da",
