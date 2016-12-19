@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.1 December 19, 2016
+
+* Added support for shell output
+
 ## v2.0 December 16, 2016
 
 * Switched to govendor for versioning
