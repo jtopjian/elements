@@ -91,11 +91,15 @@ func (e *Elements) ElementsAtPath() (interface{}, error) {
 			if err != nil {
 				if _, ok := data.(map[string]interface{}); ok {
 					value = data.(map[string]interface{})[p]
+				} else {
+					value = nil
 				}
 			} else {
 				if _, ok := data.([]interface{}); ok {
-					if len(data.([]interface{})) >= i {
+					if len(data.([]interface{})) > i {
 						value = data.([]interface{})[i]
+					} else {
+						value = nil
 					}
 				}
 			}

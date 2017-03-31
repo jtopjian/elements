@@ -79,6 +79,7 @@ func elementsHandler(config httpConfig, w http.ResponseWriter, r *http.Request) 
 	path = strings.Replace(path, "/", ".", -1)
 	debug.Printf("Element path requested: %s", path)
 
+	config.EConfig.Path = path
 	elements := e.Elements{
 		Config: config.EConfig,
 	}

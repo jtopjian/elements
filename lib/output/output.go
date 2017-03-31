@@ -15,6 +15,10 @@ type Output struct {
 }
 
 func (o *Output) Generate(elements interface{}) (string, error) {
+	if elements == nil {
+		return "", nil
+	}
+
 	switch o.Config.Format {
 	case "json":
 		return o.JSONOutput(elements)
