@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.2 March 30, 2017
+
+* Fixed issue with HTTP path recognition
+
 ## v2.1 December 19, 2016
 
 * Added support for shell output
