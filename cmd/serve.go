@@ -79,6 +79,21 @@ func elementsHandler(config httpConfig, w http.ResponseWriter, r *http.Request) 
 	path = strings.Replace(path, "/", ".", -1)
 	debug.Printf("Element path requested: %s", path)
 
+	format := r.FormValue("format")
+	if format != "" {
+		formatSupported := false
+		for _, match := range []string{"json", "shell"} {
+			if match == format {
+				formatSupported = true
+				debug.Printf("Output format requested: %s", format)
+				config.OConfig.Format = format
+			}
+		}
+		if !formatSupported {
+			debug.Printf("Unsupported output format requested: %s", format)
+		}
+	}
+
 	config.EConfig.Path = path
 	elements := e.Elements{
 		Config: config.EConfig,
