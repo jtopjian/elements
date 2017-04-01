@@ -79,12 +79,10 @@ func elementsHandler(config httpConfig, w http.ResponseWriter, r *http.Request) 
 	path = strings.Replace(path, "/", ".", -1)
 	debug.Printf("Element path requested: %s", path)
 
-  format := r.FormValue("format")
-	if format == "" {
-		format = config.OConfig.Format
+	if v := r.FormValue("format"); v != "" {
+		debug.Printf("Format override requested: %s", v)
+		config.OConfig.Format = v
 	}
-
-	config.OConfig.Format = format
 
 	output := o.Output{
 		Config: config.OConfig,
@@ -100,13 +98,14 @@ func elementsHandler(config httpConfig, w http.ResponseWriter, r *http.Request) 
 		return &httpError{err, "Error collecting elements", 500}
 	}
 
-	formattedOutput, outputErr := output.Generate(collectedElements)
-
 	title := fmt.Sprintf("Elements %s", version)
 	w.Header().Set("Server", title)
+
+	formattedOutput, outputErr := output.Generate(collectedElements)
+
 	if outputErr != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Invalid format requested"))
+		w.Write([]byte(outputErr.Error()))
 	} else if formattedOutput == "" {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("Element path not found"))
