@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.4 April 2, 2017
+
+* Prevent HTTP server from exiting when a 500 error is returned
+
 ## v2.3 April 1, 2017
 
 * Support specifying format in HTTP parameters
