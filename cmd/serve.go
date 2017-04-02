@@ -79,32 +79,44 @@ func elementsHandler(config httpConfig, w http.ResponseWriter, r *http.Request) 
 	path = strings.Replace(path, "/", ".", -1)
 	debug.Printf("Element path requested: %s", path)
 
-	config.EConfig.Path = path
-	elements := e.Elements{
-		Config: config.EConfig,
+	if v := r.FormValue("format"); v != "" {
+		debug.Printf("Format override requested: %s", v)
+		config.OConfig.Format = v
 	}
 
 	output := o.Output{
 		Config: config.OConfig,
 	}
 
-	collectedElements, err := elements.Get()
-	if err != nil {
-		return &httpError{err, "Error processing elements", 500}
+	config.EConfig.Path = path
+	elements := e.Elements{
+		Config: config.EConfig,
 	}
 
-	formattedOutput, err := output.Generate(collectedElements)
+	collectedElements, err := elements.Get()
 	if err != nil {
-		return &httpError{err, "Error processing elements", 500}
+		return &httpError{err, "Error collecting elements", 500}
 	}
 
 	title := fmt.Sprintf("Elements %s", version)
 	w.Header().Set("Server", title)
-	if formattedOutput == "" {
+
+	formattedOutput, outputErr := output.Generate(collectedElements)
+
+	if outputErr != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(outputErr.Error()))
+	} else if formattedOutput == "" {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("Element path not found"))
 	} else {
-		w.Header().Set("Content-Type", "application/json")
+		switch config.OConfig.Format {
+		case "json":
+			w.Header().Set("Content-Type", "application/json")
+		case "shell":
+			w.Header().Set("Content-Type", "text/plain")
+		}
+
 		w.Write([]byte(formattedOutput))
 	}
 
