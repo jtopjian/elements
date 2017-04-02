@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.3 April 1, 2017
+
+* Support specifying format in HTTP parameters
+
 ## v2.2 March 30, 2017
 
 * Fixed issue with HTTP path recognition
