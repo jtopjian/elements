@@ -93,13 +93,15 @@ func elementsHandler(config httpConfig, w http.ResponseWriter, r *http.Request) 
 		Config: config.EConfig,
 	}
 
-	collectedElements, err := elements.Get()
-	if err != nil {
-		return &httpError{err, "Error collecting elements", 500}
-	}
-
 	title := fmt.Sprintf("Elements %s", version)
 	w.Header().Set("Server", title)
+
+	collectedElements, err := elements.Get()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return nil
+	}
 
 	formattedOutput, outputErr := output.Generate(collectedElements)
 
