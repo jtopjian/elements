@@ -99,6 +99,12 @@ and in another, run:
 $ curl localhost:8888/elements/system/interfaces/ens3
 ```
 
+You may specify the output format via the `?format=` query parameter, like so:
+
+```shell
+$ curl localhost:8888/elements/system/interfaces/ens3?format=shell
+```
+
 ## External Elements
 
 Static JSON files and executable files can be placed under `/etc/elements/elements.d`. They will automatically be executed and read when `elements` is run.
