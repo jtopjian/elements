@@ -99,11 +99,21 @@ and in another, run:
 $ curl localhost:8888/elements/system/interfaces/ens3
 ```
 
-## External Elements
+You may specify the output format via the `?format=` query parameter, like so:
 
-Static JSON files and executable files can be placed under `/etc/elements/elements.d`. They will automatically be executed and read when `elements` is run.
+```shell
+$ curl localhost:8888/elements/system/interfaces/ens3?format=shell
+```
 
-The output of these files must be valid JSON. For example, given the executable file `/etc/elements/elements.d/foo.sh`:
+## External Elements in `elements.d/`
+
+You may extend the facts elements reports by putting external sources with valid
+JSON in a configurable `elements.d` directory. By default, this directory is
+`/etc/elements/elements.d`.
+
+Executables and static JSON files placed in `/etc/elements/elements.d` will automatically be executed and/or read when `elements` is run. If the file is executable (ie: `chmod +x`), Elements will execute it. Non-executable files with a `.json` extension will be read directly. Files in the `elements.d` directory that do not match these criteria will be ignored. Files and executables that do not contain or produce valid JSON will be ignored.
+ 
+For example, given the executable file `/etc/elements/elements.d/foo.sh`:
 
 ```bash
 #!/bin/bash
@@ -125,7 +135,13 @@ $ elements get
 	...
 ```
 
-If the file is executable (ie: `chmod +x`), Elements will execute it. Non-executable files will be read directly.
+You my specify an alternate directory location for your `elements.d` directory
+with the `-c | --configdir` flag. For example, to source external elements from
+the `/var/lib/cloud/data/elements.d` directory, you would specify:
+
+```shell
+$ elements get -c /var/lib/cloud/data
+```
 
 ## Compile from Source
 
