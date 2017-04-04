@@ -9,6 +9,18 @@
 			"revisionTime": "2016-08-11T21:45:55Z"
 		},
 		{
+			"checksumSHA1": "FNWcGKzq/1wnofjl3uh26QyBFh4=",
+			"path": "github.com/erichs/cloudsysfs",
+			"revision": "79d2e0513d5ae50055544dc25f0342b1dfa2be03",
+			"revisionTime": "2017-04-04T02:09:12Z"
+		},
+		{
+			"checksumSHA1": "kpCImZXUdKsVllCq1UtjoWAXjoc=",
+			"path": "github.com/erichs/cloudsysfs/providers",
+			"revision": "79d2e0513d5ae50055544dc25f0342b1dfa2be03",
+			"revisionTime": "2017-04-04T02:09:12Z"
+		},
+		{
 			"checksumSHA1": "wDZdTaY9JiqqqnF4c3pHP71nWmk=",
 			"path": "github.com/go-ole/go-ole",
 			"revision": "5e9c030faf78847db7aa77e3661b9cc449de29b7",
