@@ -75,11 +75,9 @@ func (e *Elements) Get() (interface{}, error) {
 		e.Add("external", externalElements)
 
 		if cloud != "" {
-			cloudElements, err := e.GetCloudElements(cloud)
-			if err != nil {
-				return nil, err
+			if cloudElements, err := e.GetCloudElements(cloud); err == nil {
+				e.Add("cloud", cloudElements)
 			}
-			e.Add("cloud", cloudElements)
 		}
 	}
 
