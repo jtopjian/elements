@@ -1,6 +1,6 @@
 # Elements
 
-Elements retrieves information about a system such as CPU/Processors, disks, memory, and network interfaces. It is meant to be used to poll a system about its static attributes.
+Elements retrieves information about a system such as CPU/Processors, disks, memory, network interfaces, and cloud metadata. It is meant to be used to poll a system about it's static attributes.
 
 This tool is similar to Facter, Ohai, Ansible facts, etc.
 

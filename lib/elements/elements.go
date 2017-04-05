@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/erichs/cloudsysfs"
 )
 
 type Config struct {
@@ -34,6 +36,9 @@ func (e *Elements) Add(key string, value interface{}) {
 func (e *Elements) Get() (interface{}, error) {
 	systemPathRE := regexp.MustCompile("^system")
 	externalPathRE := regexp.MustCompile("^external")
+	cloudPathRE := regexp.MustCompile("^cloud")
+
+	cloud := cloudsysfs.Detect()
 
 	switch {
 	case systemPathRE.MatchString(e.Config.Path):
@@ -48,18 +53,32 @@ func (e *Elements) Get() (interface{}, error) {
 			return nil, err
 		}
 		e.Add("external", externalElements)
+	case cloudPathRE.MatchString(e.Config.Path):
+		if cloud != "" {
+			cloudElements, err := e.GetCloudElements(cloud)
+			if err != nil {
+				return nil, err
+			}
+			e.Add("cloud", cloudElements)
+		}
 	default:
 		elements, err := e.GetSystemElements()
 		if err != nil {
 			return nil, err
 		}
+		e.Add("system", elements)
 
 		externalElements, err := e.GetExternalElements()
 		if err != nil {
 			return nil, err
 		}
-		e.Add("system", elements)
 		e.Add("external", externalElements)
+
+		if cloud != "" {
+			if cloudElements, err := e.GetCloudElements(cloud); err == nil {
+				e.Add("cloud", cloudElements)
+			}
+		}
 	}
 
 	return e.ElementsAtPath()
