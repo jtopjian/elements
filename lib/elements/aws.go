@@ -38,7 +38,10 @@ func crawlData(url string) map[string]interface{} {
 
 		switch {
 		default:
-			data[key] = getData(url + line)[0]
+			d := getData(url + line)
+			if len(d) > 0 {
+				data[key] = d[0]
+			}
 		case line == "dynamic":
 			break
 		case line == "meta-data":
