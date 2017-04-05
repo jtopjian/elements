@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func getData(url string) (data []string) {
+func getAWSData(url string) (data []string) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return make([]string, 0)
@@ -26,9 +26,9 @@ func getData(url string) (data []string) {
 	return
 }
 
-func crawlData(url string) map[string]interface{} {
+func crawlAWSData(url string) map[string]interface{} {
 	data := make(map[string]interface{})
-	urlData := getData(url)
+	urlData := getAWSData(url)
 
 	var key string
 	for _, line := range urlData {
@@ -38,28 +38,28 @@ func crawlData(url string) map[string]interface{} {
 
 		switch {
 		default:
-			d := getData(url + line)
+			d := getAWSData(url + line)
 			if len(d) > 0 {
 				data[key] = d[0]
 			}
 		case line == "dynamic":
 			break
 		case line == "meta-data":
-			data[key] = crawlData(url + line + "/")
+			data[key] = crawlAWSData(url + line + "/")
 		case line == "user-data":
-			data[key] = strings.Join(getData(url+line+"/"), "")
+			data[key] = strings.Join(getAWSData(url+line+"/"), "")
 		case strings.HasSuffix(line, "/"):
-			data[key[:len(line)-1]] = crawlData(url + line)
+			data[key[:len(line)-1]] = crawlAWSData(url + line)
 		case strings.HasSuffix(url, "public-keys/"):
 			keyId := strings.SplitN(line, "=", 2)[0]
-			data[key] = crawlData(url + keyId + "/")
+			data[key] = crawlAWSData(url + keyId + "/")
 		}
 	}
 	return data
 }
 
-func jsonData(url string) ([]byte, error) {
-	data, err := json.MarshalIndent(crawlData(url), "", "    ")
+func awsJsonData(url string) ([]byte, error) {
+	data, err := json.MarshalIndent(crawlAWSData(url), "", "    ")
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +69,7 @@ func jsonData(url string) ([]byte, error) {
 func (e *Elements) GetAWSElements() (map[string]interface{}, error) {
 	url := "http://169.254.169.254/latest/"
 
-	data, err := jsonData(url)
+	data, err := awsJsonData(url)
 	if err != nil {
 		return nil, fmt.Errorf("Unable to marshal data from ec2 crawl: %s", err)
 	}

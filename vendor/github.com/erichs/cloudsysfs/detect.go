@@ -9,6 +9,7 @@ var Providers = [...]func(chan<- string){
 	providers.Azure,
 	providers.DigitalOcean,
 	providers.GCE,
+	providers.OpenStack,
 }
 
 func Detect() string {
