@@ -16,6 +16,11 @@ func (e *Elements) GetCloudElements(provider string) (map[string]interface{}, er
 		if err != nil {
 			return nil, err
 		}
+	case "azure":
+		cloudElements, err = e.GetAzureElements()
+		if err != nil {
+			return nil, err
+		}
 	case "digitalocean":
 		cloudElements, err = e.GetDigitalOceanElements()
 		if err != nil {
