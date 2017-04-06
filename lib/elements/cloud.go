@@ -11,13 +11,18 @@ func (e *Elements) GetCloudElements(provider string) (map[string]interface{}, er
 	var err error
 
 	switch provider {
-	case "openstack":
-		cloudElements, err = e.GetOpenStackElements()
+	case "aws":
+		cloudElements, err = e.GetAWSElements()
 		if err != nil {
 			return nil, err
 		}
-	case "aws":
-		cloudElements, err = e.GetAWSElements()
+	case "digitalocean":
+		cloudElements, err = e.GetDigitalOceanElements()
+		if err != nil {
+			return nil, err
+		}
+	case "openstack":
+		cloudElements, err = e.GetOpenStackElements()
 		if err != nil {
 			return nil, err
 		}
