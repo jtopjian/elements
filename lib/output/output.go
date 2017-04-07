@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"sort"
+	"strings"
 )
 
 type Config struct {
@@ -74,7 +75,7 @@ func parseElementsForShell(label string, elements interface{}, parsed map[string
 	switch elements.(type) {
 	case map[string]interface{}:
 		for key, subElements := range elements.(map[string]interface{}) {
-			l := fmt.Sprintf("%s_%s", label, key)
+			l := fmt.Sprintf("%s_%s", label, sanitizeKeyForShell(key))
 			_, e, parsed = parseElementsForShell(l, subElements, parsed)
 		}
 	case []interface{}:
@@ -88,4 +89,42 @@ func parseElementsForShell(label string, elements interface{}, parsed map[string
 	}
 
 	return label, e, parsed
+}
+
+func sanitizeKeyForShell(key string) string {
+	// replace non-compliant shell characters with underscores,
+	// per IEEE Std 1003.1-2001
+	r := strings.NewReplacer(
+		"`", "_",
+		"~", "_",
+		"!", "_",
+		"@", "_",
+		"#", "_",
+		"$", "_",
+		"%", "_",
+		"^", "_",
+		"&", "_",
+		"*", "_",
+		"(", "_",
+		")", "_",
+		"-", "_",
+		"+", "_",
+		"=", "_",
+		"{", "_",
+		"}", "_",
+		"[", "_",
+		"]", "_",
+		"|", "_",
+		":", "_",
+		";", "_",
+		"'", "_",
+		"\"", "_",
+		"/", "_",
+		"?", "_",
+		",", "_",
+		".", "_",
+		"<", "_",
+		">", "_",
+	)
+	return r.Replace(key)
 }
