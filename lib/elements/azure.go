@@ -1,37 +1,22 @@
 package elements
 
 import (
-	"bufio"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
 )
 
-func getAzureData(url string) (data []string) {
-	fmt.Println("getAzureData('%s')", url)
+const azure_metadata_url = "http://169.254.169.254/metadata/latest/instance/"
 
-	client := &http.Client{}
+func getAzureData(url string) (data []string) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return make([]string, 0)
 	}
+	// Microsoft requires this header for metadata queries.
 	req.Header.Set("Metadata", "true")
-	resp, err := client.Do(req)
-	if err != nil {
-		return make([]string, 0)
-	}
-
-	defer resp.Body.Close()
-
-	scanner := bufio.NewScanner(resp.Body)
-	for scanner.Scan() {
-		data = append(data, strings.TrimRight(scanner.Text(), "\n"))
-		if err != nil {
-			break
-		}
-	}
-	return
+	return getCloudData(req)
 }
 
 func crawlAzureData(url string) map[string]interface{} {
@@ -44,35 +29,30 @@ func crawlAzureData(url string) map[string]interface{} {
 		// replace hyphens with underscores for JSON keys
 		key = strings.Replace(line, "-", "_", -1)
 
-		d := getAzureData(url + line)
-		if len(d) > 0 {
-			data[key] = d[0]
+		if strings.HasSuffix(line, "/") {
+			data[key[:len(line)-1]] = crawlAzureData(url + line)
+		} else {
+			d := getAzureData(url + line)
+			if len(d) > 0 {
+				data[key] = d[0]
+			}
 		}
 	}
 	return data
 }
 
-func azureJsonData(url string) ([]byte, error) {
-	data, err := json.MarshalIndent(crawlAzureData(url), "", "    ")
-	if err != nil {
-		return nil, err
-	}
-	return data, nil
-}
-
 func (e *Elements) GetAzureElements() (map[string]interface{}, error) {
-	url := "http://169.254.169.254/metadata/latest/instance/"
 
-	data, err := azureJsonData(url)
+	data, err := json.MarshalIndent(crawlAzureData(azure_metadata_url), "", "    ")
 	if err != nil {
-		return nil, fmt.Errorf("Error crawling azure data: %s", err)
+		return nil, fmt.Errorf("Error crawling azure metadata: %s", err)
 	}
 
-	ec2Elements := make(map[string]interface{})
-	err = json.Unmarshal(data, &ec2Elements)
+	elements := make(map[string]interface{})
+	err = json.Unmarshal(data, &elements)
 	if err != nil {
-		return nil, fmt.Errorf("Error crawling azure data: %s", err)
+		return nil, fmt.Errorf("Error crawling azure metadata: %s", err)
 	}
 
-	return ec2Elements, nil
+	return elements, nil
 }

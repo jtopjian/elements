@@ -1,9 +1,11 @@
 package elements
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 func (e *Elements) GetCloudElements(provider string) (map[string]interface{}, error) {
@@ -54,4 +56,22 @@ func (e *Elements) GetElementsFromJsonUrl(url string) (map[string]interface{}, e
 	}
 
 	return osElements, nil
+}
+
+func getCloudData(req *http.Request) (data []string) {
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	defer resp.Body.Close()
+	if err != nil {
+		return make([]string, 0)
+	}
+
+	scanner := bufio.NewScanner(resp.Body)
+	for scanner.Scan() {
+		data = append(data, strings.TrimRight(scanner.Text(), "\n"))
+		if err != nil {
+			break
+		}
+	}
+	return
 }
