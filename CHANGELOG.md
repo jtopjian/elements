@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.5 Unreleased
+
+* Add support for AWS cloud metadata
+* Munge non-portable characters for shell output
+
 ## v2.4 April 2, 2017
 
 * Prevent HTTP server from exiting when a 500 error is returned
