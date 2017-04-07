@@ -1,4 +1,4 @@
-package elements
+package cloud
 
 import (
 	"encoding/json"
@@ -49,7 +49,7 @@ func crawlAWSData(url string) map[string]interface{} {
 	return data
 }
 
-func (e *Elements) GetAWSElements() (map[string]interface{}, error) {
+func GetAWSElements() (map[string]interface{}, error) {
 	data, err := json.MarshalIndent(crawlAWSData(aws_metadata_url), "", "    ")
 	if err != nil {
 		return nil, fmt.Errorf("Error crawling aws metadata: %s", err)

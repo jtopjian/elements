@@ -1,4 +1,4 @@
-package elements
+package cloud
 
 import (
 	"bufio"
@@ -8,28 +8,28 @@ import (
 	"strings"
 )
 
-func (e *Elements) GetCloudElements(provider string) (map[string]interface{}, error) {
+func GetElements(provider string) (map[string]interface{}, error) {
 	var cloudElements map[string]interface{}
 	var err error
 
 	switch provider {
 	case "aws":
-		cloudElements, err = e.GetAWSElements()
+		cloudElements, err = GetAWSElements()
 		if err != nil {
 			return nil, err
 		}
 	case "azure":
-		cloudElements, err = e.GetAzureElements()
+		cloudElements, err = GetAzureElements()
 		if err != nil {
 			return nil, err
 		}
 	case "digitalocean":
-		cloudElements, err = e.GetDigitalOceanElements()
+		cloudElements, err = GetDigitalOceanElements()
 		if err != nil {
 			return nil, err
 		}
 	case "openstack":
-		cloudElements, err = e.GetOpenStackElements()
+		cloudElements, err = GetOpenStackElements()
 		if err != nil {
 			return nil, err
 		}
@@ -41,7 +41,7 @@ func (e *Elements) GetCloudElements(provider string) (map[string]interface{}, er
 	return cloudElements, nil
 }
 
-func (e *Elements) GetElementsFromJsonUrl(url string) (map[string]interface{}, error) {
+func GetElementsFromJsonUrl(url string) (map[string]interface{}, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("Error retrieving metadata from '%s': %s", url, err)

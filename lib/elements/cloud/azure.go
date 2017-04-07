@@ -1,4 +1,4 @@
-package elements
+package cloud
 
 import (
 	"encoding/json"
@@ -41,7 +41,7 @@ func crawlAzureData(url string) map[string]interface{} {
 	return data
 }
 
-func (e *Elements) GetAzureElements() (map[string]interface{}, error) {
+func GetAzureElements() (map[string]interface{}, error) {
 
 	data, err := json.MarshalIndent(crawlAzureData(azure_metadata_url), "", "    ")
 	if err != nil {
