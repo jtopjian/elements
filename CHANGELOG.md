@@ -2,7 +2,7 @@
 
 ## v2.5 Unreleased
 
-* Add support for AWS cloud metadata
+* Add support for AWS, Digital Ocean, and OpenStack cloud metadata
 * Munge non-portable characters for shell output
 
 ## v2.4 April 2, 2017
