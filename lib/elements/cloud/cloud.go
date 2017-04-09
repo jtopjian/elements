@@ -28,6 +28,11 @@ func GetElements(provider string) (map[string]interface{}, error) {
 		if err != nil {
 			return nil, err
 		}
+	case "gce":
+		cloudElements, err = GetGoogleComputeElements()
+		if err != nil {
+			return nil, err
+		}
 	case "openstack":
 		cloudElements, err = GetOpenStackElements()
 		if err != nil {
@@ -41,21 +46,22 @@ func GetElements(provider string) (map[string]interface{}, error) {
 	return cloudElements, nil
 }
 
-func GetElementsFromJsonUrl(url string) (map[string]interface{}, error) {
-	resp, err := http.Get(url)
-	if err != nil {
-		return nil, fmt.Errorf("Error retrieving metadata from '%s': %s", url, err)
-	}
+func GetElementsFromJsonUrl(req *http.Request) (map[string]interface{}, error) {
+	client := &http.Client{}
+	resp, err := client.Do(req)
 	defer resp.Body.Close()
+	if err != nil {
+		return nil, fmt.Errorf("Error retrieving JSON metadata from '%s': %s", req.URL, err)
+	}
 
 	jsonDecoder := json.NewDecoder(resp.Body)
 
-	osElements := make(map[string]interface{})
-	if err := jsonDecoder.Decode(&osElements); err != nil {
+	elements := make(map[string]interface{})
+	if err := jsonDecoder.Decode(&elements); err != nil {
 		return nil, fmt.Errorf("Error processing metadata JSON: %s", err)
 	}
 
-	return osElements, nil
+	return elements, nil
 }
 
 func getCloudData(req *http.Request) (data []string) {
