@@ -1,29 +1,20 @@
-package elements
+package cloud
 
 import (
-	"bufio"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
 )
 
+const aws_metadata_url = "http://169.254.169.254/latest/"
+
 func getAWSData(url string) (data []string) {
-	resp, err := http.Get(url)
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return make([]string, 0)
 	}
-
-	defer resp.Body.Close()
-
-	scanner := bufio.NewScanner(resp.Body)
-	for scanner.Scan() {
-		data = append(data, strings.TrimRight(scanner.Text(), "\n"))
-		if err != nil {
-			break
-		}
-	}
-	return
+	return getCloudData(req)
 }
 
 func crawlAWSData(url string) map[string]interface{} {
@@ -58,29 +49,19 @@ func crawlAWSData(url string) map[string]interface{} {
 	return data
 }
 
-func awsJsonData(url string) ([]byte, error) {
-	data, err := json.MarshalIndent(crawlAWSData(url), "", "    ")
+func GetAWSElements() (map[string]interface{}, error) {
+	data, err := json.MarshalIndent(crawlAWSData(aws_metadata_url), "", "    ")
 	if err != nil {
-		return nil, err
-	}
-	return data, nil
-}
-
-func (e *Elements) GetAWSElements() (map[string]interface{}, error) {
-	url := "http://169.254.169.254/latest/"
-
-	data, err := awsJsonData(url)
-	if err != nil {
-		return nil, fmt.Errorf("Unable to marshal data from ec2 crawl: %s", err)
+		return nil, fmt.Errorf("Error crawling aws metadata: %s", err)
 	}
 
-	ec2Elements := make(map[string]interface{})
-	err = json.Unmarshal(data, &ec2Elements)
+	elements := make(map[string]interface{})
+	err = json.Unmarshal(data, &elements)
 	if err != nil {
-		return nil, fmt.Errorf("Unable to unmarshal data from ec2 JSON: %s", err)
+		return nil, fmt.Errorf("Error crawling aws metadata: %s", err)
 	}
 
-	return ec2Elements, nil
+	return elements, nil
 }
 
 /*
