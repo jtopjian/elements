@@ -1,6 +1,6 @@
 # Elements
 
-Elements retrieves information about a system such as CPU/Processors, disks, memory, network interfaces, and cloud metadata. It is meant to be used to poll a system about it's static attributes.
+Elements retrieves information about a system such as CPU/Processors, disks, memory, network interfaces, and cloud metadata. It is meant to be used to query a system about its static attributes.
 
 This tool is similar to Facter, Ohai, Ansible facts, etc.
 
@@ -22,20 +22,20 @@ $ elements get
 {
   "system": {
     "host": {
-			"bootTime": 1480266892,
-			"hostid": "2DAAF9F7-0ED2-4DA7-BDD7-7A03F37C091A",
-			"hostname": "jtdev",
-			"kernelVersion": "4.4.0-45-generic",
-			"os": "linux",
-			"platform": "ubuntu",
-			"platformFamily": "debian",
-			"platformVersion": "16.04",
-			"procs": 682,
-			"uptime": 1678017,
-			"virtualizationRole": "host",
-			"virtualizationSystem": "kvm"
+	"bootTime": 1480266892,
+	"hostid": "2DAAF9F7-0ED2-4DA7-BDD7-7A03F37C091A",
+	"hostname": "jtdev",
+	"kernelVersion": "4.4.0-45-generic",
+	"os": "linux",
+	"platform": "ubuntu",
+	"platformFamily": "debian",
+	"platformVersion": "16.04",
+	"procs": 682,
+	"uptime": 1678017,
+	"virtualizationRole": "host",
+	"virtualizationSystem": "kvm"
     },
-		...
+...
 ```
 
 To retrieve a subset of elements, "walk" the tree using a dotted notation:
