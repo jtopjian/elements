@@ -131,8 +131,8 @@ $ elements get
     "hello": "world"
    }
   },
-	"system": {
-	...
+  "system": {
+    ...
 ```
 
 You my specify an alternate directory location for your `elements.d` directory
