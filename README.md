@@ -127,9 +127,9 @@ Elements will output:
 $ elements get
 {
   "external": {
-   "foo": {
-    "hello": "world"
-   }
+     "foo": {
+        "hello": "world"
+     }
   },
   "system": {
     ...
