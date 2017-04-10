@@ -2,16 +2,16 @@
 
 ## v2.5 Unreleased
 
-* Add support for AWS, Digital Ocean, and OpenStack cloud metadata
-* Munge non-portable characters for shell output
+* Add support for AWS, Azure, Digital Ocean, Google, and OpenStack cloud metadata (@erichs)
+* Munge non-portable characters for shell output (@erichs)
 
 ## v2.4 April 2, 2017
 
-* Prevent HTTP server from exiting when a 500 error is returned
+* Prevent HTTP server from exiting when a 500 error is returned (@erichs)
 
 ## v2.3 April 1, 2017
 
-* Support specifying format in HTTP parameters
+* Support specifying format in HTTP parameters (@erichs)
 
 ## v2.2 March 30, 2017
 
