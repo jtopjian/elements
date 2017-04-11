@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.5 Unreleased
+## v2.5 April 10, 2017
 
 * Add support for AWS, Azure, Digital Ocean, Google, and OpenStack cloud metadata (@erichs)
 * Munge non-portable characters for shell output (@erichs)
