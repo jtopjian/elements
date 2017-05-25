@@ -84,11 +84,21 @@ func parseElementsForShell(label string, elements interface{}, parsed map[string
 			_, e, parsed = parseElementsForShell(l, subElements, parsed)
 		}
 	default:
-		parsed[label] = fmt.Sprintf("%v", elements)
+		parsed[label] = fmt.Sprintf("%v", sanitizeValueForShell(elements))
 		return label, nil, parsed
 	}
 
 	return label, e, parsed
+}
+
+func sanitizeValueForShell(val interface{}) interface{} {
+	switch val.(type) {
+	case string:
+		// escape double quotes in shell string values
+		return strings.Replace(val.(string), "\"", "\\\"", -1)
+	default:
+		return val
+	}
 }
 
 func sanitizeKeyForShell(key string) string {
