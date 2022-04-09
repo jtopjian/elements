@@ -7,7 +7,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/erichs/cloudsysfs"
+	"github.com/perlogix/libdetectcloud"
 	"github.com/jtopjian/elements/lib/elements/cloud"
 )
 
@@ -39,7 +39,7 @@ func (e *Elements) Get() (interface{}, error) {
 	externalPathRE := regexp.MustCompile("^external")
 	cloudPathRE := regexp.MustCompile("^cloud")
 
-	cloudProvider := cloudsysfs.Detect()
+	cloudProvider := libdetectcloud.Detect()
 
 	switch {
 	case systemPathRE.MatchString(e.Config.Path):
