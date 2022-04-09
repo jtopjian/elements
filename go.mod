@@ -3,7 +3,7 @@ module github.com/jtopjian/elements
 go 1.18
 
 require (
-	github.com/erichs/cloudsysfs v0.0.0-20170405024951-ac460038d889
+	github.com/perlogix/libdetectcloud v0.0.0-20210504034315-50bebf73878e
 	github.com/shirou/gopsutil/v3 v3.22.3
 	github.com/urfave/cli v1.19.1
 )
