@@ -19,7 +19,6 @@ builds:
   goos:
     - freebsd
     - linux
-    - darwin
   goarch:
     - amd64
     - '386'
