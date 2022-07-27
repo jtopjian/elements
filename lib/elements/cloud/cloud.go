@@ -12,13 +12,15 @@ func GetElements(provider string) (map[string]interface{}, error) {
 	var cloudElements map[string]interface{}
 	var err error
 
-	switch provider {
-	case "aws":
+	normalizedProvider := strings.ToLower(strings.ReplaceAll(provider, " ", ""))
+
+	switch normalizedProvider {
+	case "amazonwebservices":
 		cloudElements, err = GetAWSElements()
 		if err != nil {
 			return nil, err
 		}
-	case "azure":
+	case "microsoftazure":
 		cloudElements, err = GetAzureElements()
 		if err != nil {
 			return nil, err
@@ -28,7 +30,7 @@ func GetElements(provider string) (map[string]interface{}, error) {
 		if err != nil {
 			return nil, err
 		}
-	case "gce":
+	case "googlecomputeengine":
 		cloudElements, err = GetGoogleComputeElements()
 		if err != nil {
 			return nil, err
