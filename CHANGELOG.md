@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.7 July 27, 2022
+
+* Moving to GitHub Actions
+* FreeBSD support (@erichs)
+
 ## v2.6 May 26, 2017
 
 * Escape shell output (@erichs)
